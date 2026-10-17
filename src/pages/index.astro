@@ -1,11 +1,22 @@
+---
+import markdown from '../content/maze.md?raw';
+import { renderObsidian } from '../lib/render-obsidian.mjs';
+import '../styles/article.css';
+
+const html = await renderObsidian(markdown, import.meta.env.BASE_URL);
+---
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello world</title>
+    <meta name="theme-color" content="#18222e" />
+    <title>(vizualization demo)</title>
   </head>
   <body>
-    <h1>Hello world!</h1>
+    <main class="page">
+      <article class="post" set:html={html} />
+    </main>
   </body>
 </html>
