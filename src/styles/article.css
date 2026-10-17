@@ -1,3 +1,5 @@
+
+
 :root {
   color-scheme: dark;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -10,6 +12,28 @@
 
 * {
   box-sizing: border-box;
+}
+
+.green {
+    color: lime;
+}
+.red {
+    color:red;
+}
+
+.purple {
+    color: rgb(140, 116, 164);
+}
+
+h3
+{
+    text-align: center;
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background-color: #8ca3b1;
 }
 
 body {
@@ -67,12 +91,16 @@ figure img {
   margin-inline: auto;
 }
 
-figcaption {
+figcaption, .image-description{
   margin: 0.65em auto 0;
-  color: #a4b1c0;
+  color: #cfd8e1;
   font-size: 0.85em;
   line-height: 1.5;
   text-align: center;
+}
+
+.image-description + figure { 
+    margin-top: 0.4em;
 }
 
 code {
