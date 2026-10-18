@@ -91,7 +91,7 @@ figure img {
   margin-inline: auto;
 }
 
-figcaption, .image-description{
+figcaption, .image-description, .image-description-up{
   margin: 0.65em auto 0;
   color: #cfd8e1;
   font-size: 0.85em;
@@ -101,6 +101,10 @@ figcaption, .image-description{
 
 .image-description + figure { 
     margin-top: 0.4em;
+}
+
+.image-description-up + figure { 
+    margin-top: -0.4em;
 }
 
 code {

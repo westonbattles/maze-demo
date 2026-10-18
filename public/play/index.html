@@ -25,7 +25,7 @@
     <main>
       <canvas id="unity-canvas" width="960" height="600" tabindex="0" aria-label="Maze generation demo"></canvas>
       <div id="loading" role="status">
-        <span id="status">Loading demo…</span>
+        <span id="status">Loading...</span>
         <progress id="progress" max="1" value="0" aria-label="Demo loading progress"></progress>
         <p id="error" hidden></p>
       </div>
@@ -38,6 +38,24 @@
       const progress = document.querySelector('#progress');
       const error = document.querySelector('#error');
       const fullscreen = document.querySelector('#fullscreen');
+
+      // Browsers can deny a fresh lock briefly after Escape. Unity's loader
+      // treats an unhandled rejection as a runtime failure, so handle that
+      // normal permission result on this canvas before Unity starts.
+      const requestPointerLock = canvas.requestPointerLock?.bind(canvas);
+      function handlePointerLockDenial(error) {
+        if (error?.name !== 'SecurityError' && error?.name !== 'NotAllowedError') throw error;
+      }
+      if (requestPointerLock) {
+        canvas.requestPointerLock = (...args) => {
+          try {
+            const request = requestPointerLock(...args);
+            return request?.catch(handlePointerLockDenial);
+          } catch (error) {
+            handlePointerLockDenial(error);
+          }
+        };
+      }
 
       function showError(message) {
         loading.hidden = false;
@@ -66,7 +84,7 @@
         };
         const unity = await createUnityInstance(canvas, config, value => {
           progress.value = value;
-          status.textContent = `Loading demo… ${Math.round(value * 100)}%`;
+          status.textContent = `Loading... ${Math.round(value * 100)}%`;
         });
         loading.hidden = true;
         fullscreen.disabled = false;

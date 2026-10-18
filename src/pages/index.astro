@@ -17,9 +17,10 @@ const html = await renderObsidian(markdown, import.meta.env.BASE_URL);
   </head>
   <body>
     <main class="page">
-        <h3>Maze Generation Visualization</h3>
-
+      <h3>Maze Generation Demo</h3>
       <UnityDemo />
+      <p class="image-description">(wasd to move)</p>
+      
       <article class="post" set:html={html} />
     </main>
   </body>
