@@ -1,11 +1,4 @@
 
-
-
-(vizualization demo)
-
-
-
-
 <br>
 <br>
 <br>
@@ -29,6 +22,7 @@ In Skyblock Dungeons, mazes are built from rooms that are defined with *cell* sh
 
 
 ![[Screenshot 2026-10-16 at 10.34.19 AM.png|273]]
+attempting to place this room in our generation step would fail
 
 <br>
 <br>
@@ -37,16 +31,16 @@ In Skyblock Dungeons, mazes are built from rooms that are defined with *cell* sh
 
 ***
 
-Taking inspiration from The Maze Runner, I decided to map this generation idea onto a perimeter maze with four entrances from a central starting area. I also wanted there to be a boss room that spawns on a random outer cell, with have the condition that it be reachable from every entrance
+Taking inspiration from The Maze Runner, I decided to map this generation idea onto a perimeter maze with four entrances from a central starting area. I also wanted there to be a boss room that spawns on a random outer cell, with the condition that it be reachable from every entrance
 
 ![[Screenshot 2026-10-16 at 11.06.43 AM.png|319]]
 
 
 <br>
-It follows that the first step of the algorithm is to simply pick an outer cell to place our boss room in, and figure out a path from each entrance to that room cell. If we allow these paths to merge, it creates a sort of spine for our maze:
+It follows that the first step of the algorithm is to simply figure out a path from each entrance to that boss room cell. If we allow these paths to merge, it creates a sort of spine for our maze:
 
 ![[Screenshot 2026-10-16 at 11.05.29 AM 1.png|319]]
-
+We can use [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) to do this, with random weight variance to allow for path variation
 
 
 From here, the next step is to fill in the rest of our maze, which we can simply do by choosing a random "visited" cell (one that already has a path going through it), and creating a connection to one of its "unvisited" neighbors
@@ -55,6 +49,8 @@ From here, the next step is to fill in the rest of our maze, which we can simply
 *we can also add the stipulation that a connection can be created between two previously visited cells, so long as the distance between the two is greater than a threshold value (6 in my implementation). This creates more inner-connectivity throughout the maze which I find to be more enjoyable.*
 
 ***
+<h2>Defining rooms</h2>
+
 Now that we have our maze layout done (guaranteeing every cell gets visited), we can finally start adding rooms! But first, we should talk about how to actually define rooms.
 
 
@@ -128,9 +124,9 @@ As mentioned before, interconnectivity of rooms seems to be more enjoyable as it
 As you can see, the middle openings are both set to "<span class="green">Open</span>"
 
 
-All this requires us to do, is fill out every room in our maze first, WITHOUT resolving the opening opportunities. And then doing a separate pass for filling/opening doorways.
+All this requires us to do, is fill out every room in our maze first, WITHOUT resolving the opening opportunities. And then doing a separate pass for filling/opening doorways. And if we don't want every double connection to be left open, we can simply just gate it behind a random probability.
 
-And that's the basis of the algorithm! We are guaranteed every time to get a filled in maze, with paths from each entrance to the boss room. There are a few more optimizations that my algorithm makes, which I left out here. For example, if a room fails in my generation step, I allow for it to be rotated 90 degrees and checked again. This brings up a lot of interesting challenges for asymmetrical rooms like the L shapes and the 1xN's, specifically how to ensure that every possible grid placement can get checked, but I'll leave that as a thought exercise for the reader.
+And that's the basis of the algorithm! We are guaranteed every time to get a filled in maze, with paths from each entrance to the boss room. There are a few more optimizations that my algorithm makes, which I left out here. For example, if a room fails in my generation step, I allow for it to be rotated 90 degrees and checked again (repeated for all possible orientations/placements). This brings up a lot of interesting challenges for asymmetrical rooms like the L shapes and the 1xN's, specifically how to ensure that every possible grid placement can get checked, but I'll leave that as a thought exercise for the reader.
 
 <br>
 Thanks for reading!

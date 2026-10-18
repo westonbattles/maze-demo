@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "predev": "node scripts/unity-build.mjs restore",
+    "prebuild": "node scripts/unity-build.mjs restore",
+    "demo:import": "node scripts/unity-build.mjs import",
+    "demo:publish": "node scripts/unity-build.mjs publish"
   },
   "engines": {
     "node": "^24.0.0"

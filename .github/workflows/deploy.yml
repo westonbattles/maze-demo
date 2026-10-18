@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Check out the website
         uses: actions/checkout@v7
+      - name: Download the Unity Web build
+        run: node scripts/unity-build.mjs restore
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Build Astro and upload the site
         uses: withastro/action@v6
         with:

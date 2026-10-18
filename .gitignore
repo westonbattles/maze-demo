@@ -2,3 +2,9 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+
+# Unity exports are stored as GitHub Release assets, outside Git history.
+.unity-build/
+public/play/Build/
+public/play/StreamingAssets/
+public/play/build.json

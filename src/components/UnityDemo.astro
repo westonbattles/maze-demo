@@ -1,0 +1,34 @@
+---
+const demoUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/play/index.html`;
+---
+
+<section class="demo" aria-label="Maze generation demo">
+  <iframe
+    src={demoUrl}
+    title="Interactive maze generation demo"
+    allow="fullscreen; autoplay; gamepad"
+    allowfullscreen
+    loading="eager"
+  ></iframe>
+</section>
+
+<style>
+  .demo {
+    margin: 0 0 2.5rem;
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 8 / 5;
+    border: 1px solid #52677c;
+    background: #101923;
+  }
+
+  p {
+    margin: 0.65rem 0 0;
+    color: #b6c4d0;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maze generation demo</title>
+    <style>
+      :root { color-scheme: dark; font-family: system-ui, sans-serif; color: #e3e8ee; background: #101923; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+      body { display: flex; flex-direction: column; }
+      main { position: relative; flex: 1; min-height: 0; }
+      canvas { display: block; width: 100%; height: 100%; background: #101923; }
+      #loading { position: absolute; inset: 0; display: grid; place-content: center; gap: 1rem; padding: 1.5rem; text-align: center; background: #101923; }
+      #loading[hidden] { display: none; }
+      progress { width: min(15rem, 70vw); accent-color: #a2b8c9; }
+      #error { max-width: 30rem; margin: 0; line-height: 1.5; }
+      footer { display: flex; align-items: center; justify-content: space-between; min-height: 2rem; padding: 0.25rem 0.6rem; font-size: 0.75rem; }
+      button { border: 1px solid #52677c; border-radius: 3px; padding: 0.25rem 0.6rem; color: #e3e8ee; background: #263647; font: inherit; cursor: pointer; }
+      button:disabled { opacity: 0.5; cursor: default; }
+      button:focus-visible { outline: 2px solid #a2b8c9; outline-offset: 2px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <canvas id="unity-canvas" width="960" height="600" tabindex="0" aria-label="Maze generation demo"></canvas>
+      <div id="loading" role="status">
+        <span id="status">Loading demo…</span>
+        <progress id="progress" max="1" value="0" aria-label="Demo loading progress"></progress>
+        <p id="error" hidden></p>
+      </div>
+    </main>
+    <button id="fullscreen" type="button" disabled>Fullscreen</button>
+    <script>
+      const canvas = document.querySelector('#unity-canvas');
+      const loading = document.querySelector('#loading');
+      const status = document.querySelector('#status');
+      const progress = document.querySelector('#progress');
+      const error = document.querySelector('#error');
+      const fullscreen = document.querySelector('#fullscreen');
+
+      function showError(message) {
+        loading.hidden = false;
+        status.textContent = 'The demo could not load.';
+        progress.hidden = true;
+        error.hidden = false;
+        error.textContent = 'Try refreshing the page. If it keeps happening, try another browser.';
+        console.error(message);
+      }
+
+      async function start() {
+        const response = await fetch('build.json');
+        if (!response.ok) throw new Error('Could not find the Unity build configuration.');
+        const { loaderUrl, ...config } = await response.json();
+        await new Promise((resolve, reject) => {
+          const loader = document.createElement('script');
+          loader.src = loaderUrl;
+          loader.onload = resolve;
+          loader.onerror = () => reject(new Error('Could not load the Unity loader.'));
+          document.body.appendChild(loader);
+        });
+
+        config.showBanner = (message, type) => {
+          if (type === 'error') showError(message);
+          else console.warn(message);
+        };
+        const unity = await createUnityInstance(canvas, config, value => {
+          progress.value = value;
+          status.textContent = `Loading demo… ${Math.round(value * 100)}%`;
+        });
+        loading.hidden = true;
+        fullscreen.disabled = false;
+        fullscreen.addEventListener('click', () => unity.SetFullscreen(1));
+      }
+
+      start().catch(showError);
+    </script>
+  </body>
+</html>
