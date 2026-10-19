@@ -67,7 +67,9 @@
       }
 
       async function start() {
-        const response = await fetch('build.json');
+        // The config names the current hashed build files; always re-fetch it
+        // after a deployment while allowing the large build files to stay cached.
+        const response = await fetch('build.json', { cache: 'no-store' });
         if (!response.ok) throw new Error('Could not find the Unity build configuration.');
         const { loaderUrl, ...config } = await response.json();
         await new Promise((resolve, reject) => {
